@@ -43,7 +43,14 @@ class ParseCSV
                 break;
         }
 
-        // Slice off the number of rows we needed to determine the column map
+
+        // If we have not found all of the user defined columns, return false
+        if(count($map) != $found)
+        {
+            return false;
+        }
+
+        // Otherwise, slice off the number of rows we needed to determine the column map
         $array = array_slice($array, $rows);
 
         // Return the updated array and mapped columns
@@ -58,7 +65,7 @@ class ParseCSV
         foreach($array as $row)
         {
             $temp = [];
-            
+
             foreach($columns as $index => $column)
             {
                 if(isset($row[$index]))
@@ -67,7 +74,11 @@ class ParseCSV
                 }
             }
 
-            $output[] = $temp;
+            // Make sure this row isn't empty
+            if(!empty($temp))
+            {
+                $output[] = $temp;
+            }
         }
 
         return $output;
@@ -76,7 +87,14 @@ class ParseCSV
     public function parse($file, $map)
     {
         $array = $this->csv_to_array($file);
-        list($array, $columns) = $this->map_columns($array, $map);
-        return $this->build_output($array, $columns);
+        $mapped = $this->map_columns($array, $map);
+
+        if(is_array($mapped))
+        {
+            list($array, $columns) = $mapped;
+            return $this->build_output($array, $columns);
+        }
+
+        return false;
     }
 }

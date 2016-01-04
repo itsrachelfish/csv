@@ -15,4 +15,14 @@ $map =
 $array = $csv->parse('example.csv', $map);
 print_r($array);
 
+// If the CSV is not parsed properly, parse will return false
+$badmap =
+[
+    'not_real' => 'Not A Real Column',
+    'fake' => 'Fake Column', 
+];
+
+$badarray = $csv->parse('example.csv', $badmap);
+var_dump($badarray);
+
 ?>
