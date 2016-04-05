@@ -5,7 +5,7 @@ class ParseCSV
     // Simple function to convert lines in a CSV to an array
     private function csv_to_array($file)
     {
-        $text = file_get_contents($file);        
+        $text = file_get_contents($file);
         return array_map('str_getcsv', preg_split('/\R/m', $text));
     }
 
@@ -19,7 +19,7 @@ class ParseCSV
         // Make sure all CSV column names are lowercase in the map
         foreach($map as $key => $value)
         {
-            $map[$key] = strtolower($value);
+            $map[$key] = trim(strtolower($value));
         }
 
         foreach($array as $row_id => $row)
@@ -29,7 +29,7 @@ class ParseCSV
             foreach($row as $column_id => $column)
             {
                 // Lowercase the current CSV column name
-                $column = strtolower($column);
+                $column = trim(strtolower($column));
 
                 if(in_array($column, $map))
                 {
@@ -60,11 +60,11 @@ class ParseCSV
     // Function to loop through all CSV data and build the final output based on the user-defined map
     private function build_output($array, $columns)
     {
-        $output = [];
+        $output = array();
         
         foreach($array as $row)
         {
-            $temp = [];
+            $temp = array();
 
             foreach($columns as $index => $column)
             {
